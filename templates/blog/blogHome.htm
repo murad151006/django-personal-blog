@@ -1,0 +1,30 @@
+{%extends 'base.htm' %}
+
+{%block title %} blogHome {% endblock title %}
+{% block blogactive %} active {% endblock blogactive %}
+
+{%block body %} 
+
+<div class="container">
+<h2 class="my-3">My Popular blog posts: </h2>
+    <div class="row">
+    {% for post in allPosts  %}
+        <div class="col col-md-4 my-2">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body bg-warning">
+                    <h5 class="card-title text-dark">{{post.title}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{post.author}}</h6>
+                    <p class="card-text ">{{post.body |truncatechars:100}}</p>
+                    <p class="card-text">Posted: {{post.posted}}</p>
+                    <a href="/blog/{{post.slug}}" class="card-link btn btn-outline-success">Read More</a>
+                </div>
+            </div>
+        </div>
+{% endfor %}
+        
+
+       
+    </div>
+</div>
+
+{% endblock body %}

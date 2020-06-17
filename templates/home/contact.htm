@@ -1,0 +1,40 @@
+{%extends 'base.htm' %}
+
+{%block title %} Contact {% endblock title %}
+{% block contactactive %} active {% endblock contactactive %}
+{%block body %} 
+<h2 class="container mt-5">Please Fill Up the Required Fills for Contact</h2>
+
+<div class="container my-1">
+  
+    <form method="post" action="/contact">
+      {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="name" class="form-control" id="name" name="name" aria-describedby="emailHelp">
+        </div>
+          
+        <div class="form-group">
+            <label for="Phone">Phone</label>
+            <input type="phone" class="form-control" name="Phone" id="phone">
+        </div>
+        
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <textarea type="phone" class="form-control" id="Description" name="Description"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-warning">Submit</button>
+      
+      </form>
+    
+</div>
+
+{% endblock body %}

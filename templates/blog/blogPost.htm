@@ -1,0 +1,121 @@
+{%extends 'base.htm' %}
+
+{%block title %} blogPost {% endblock title %}
+{% block blogactive %} active {% endblock blogactive %}
+
+{%block body %} 
+{% load extras %}
+{% comment %} naturilize {% endcomment %}
+
+<!--Showing the posts in details-->
+  <div class="container my-3">
+        <h2 class="blog-post-title">{{posts.title}}</h2>
+        <p class="blog-post-meta">Written by <a href="/about">{{posts.author}}</a> at {{posts.posted}}</p>
+        <p>{{posts.body}}</p>
+  </div>
+
+<!--Headline for Comments and it counts-->
+    
+      <h4 class="container">Comments ({{comments.count}})</h4>
+
+<!--Showing comments if comments are available for that posts-->
+    
+ 
+
+      {% for comment in comments  %}
+         <div class="container">
+              <div class="card" style="width:100">
+                  <div class="card-body row">
+                      <div class="col"> 
+                          <i class="fas fa-thumbs-up"></i>
+                          <strong>{{comment.user.username}} says</strong>
+                          <span>{{comment.comment}}</span>
+                      </div>
+                  </div>
+              </div>
+       
+        {% for reply in replyDict|get_val:comment.sno %}
+                    <div class="container">
+                        <div class="card" style="width:100">
+                            <div class="card-body row bg-info">
+                                    <div class="col col-md-8"> 
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <strong>{{comment.user.username}} replied</strong>
+                                        <span>{{reply}}</span>
+                                    </div>
+                                    <div class="col col-md-2"></div>
+                                    <div class="col col-md-2"></div>
+                              </div>
+                        </div>
+                    </div>
+                {% endfor %}
+  
+
+<!--Checking for authentifications for restiction reply-->
+
+        {% if user.is_authenticated %}
+       
+            <p>
+                <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#replybox{{comment.sno}}" aria-expanded="false" aria-controls="replybox{{comment.sno}}">
+                        Reply
+                </button>
+            </p>
+
+            <!--When Button is clicked then replying box will be shown-->
+            <div class="collapse" id="replybox{{comment.sno}}">
+                <div class="card card-body">
+                  <form action="/blog/postComment" method="post">
+                    <input type="text" class="form-control" name="comment">
+                    <!--When we add a comment, the comment will be add in blogCommnet model and every input includes a seriel no -->
+                    <input type="hidden" name="parentSno" value="{{comment.sno}}">
+
+                    <!--To make the commnet of that specific post we also added post's serial no-->
+                    <input type="hidden" name="postSno" value="{{posts.slno}}">
+                    <button type="submit" class="btn btn-primary">Post a reply</button>
+                {% csrf_token %}
+                  </form>
+            </div>
+          </div>
+
+<!--Otherwise reply button will be disbled-->
+      {% else %}
+            <p>
+        <button class="btn btn-primary disabled" type="button" data-toggle="collapse" data-target="#replybox{{comment.sno}}" aria-expanded="false" aria-controls="replybox{{comment.sno}}">
+          Reply
+        </button>
+      </p>
+      {% endif %}
+</div>
+
+    
+            
+               
+          
+                
+
+ {% endfor %} <!--End for printing the comments-->
+  {% csrf_token %}
+
+
+
+<!--Showing Comment box input-->
+   
+    {% if user.is_authenticated %}
+      <div class="container mb-2">
+          
+          <form action="/blog/postComment" method="post">
+                <div class="form-group">
+                  <input type="text" class="form-control" name="comment">
+                </div>
+            
+                <input type="hidden" name="parentSno" value="">
+                <input type="hidden" name="postSno" value="{{posts.slno}}">
+                <button type="submit" class="btn btn-primary">Post a Comment</button>
+            {% csrf_token %}
+           </form>
+          </div>
+          {% else %}
+            <p>Please login to comment</p>
+          {% endif %}
+      
+    {% endblock body %}

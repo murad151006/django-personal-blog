@@ -1,0 +1,21 @@
+{%extends 'base.htm' %} <!--it loads the base.html files content-->
+
+{% load static %}
+
+{%block title %} Home {% endblock title %} <!--Title of the page-->
+
+{% block homeactive %} active {% endblock homeactive %} <!--active class when your are that pages-->
+
+
+{%block body %} 
+
+<div class="hero-image">
+    <div class="hero-text">
+        <h1>I'm Murad Durjoy</h1>
+        <p>I am a Django developer, can develop frontend and backend also with clinets satisfaction. You may contact with me.</p>
+        <a href="/contact"><button class="btn btn-info">Hire me</button></a>
+        <a href="/blog"><button class="btn btn-warning">Read me</button></a>
+    </div>
+</div>
+
+ {% endblock body %}

@@ -1,0 +1,212 @@
+<!doctype html>
+
+{% load static %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static '../static/css/home.css' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <title> {%block title %} {%endblock title %} </title>
+  </head>
+
+
+  <body>
+
+  <!--Navigation Bar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+       <div class="container">
+            <a class="navbar-brand" href="/">Murad's Dairy</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+      
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item {% block homeactive %} {% endblock homeactive %}">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+
+                    <li class="nav-item {% block aboutactive %} {% endblock aboutactive %}">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+
+                    <li class="nav-item {% block blogactive %} {% endblock blogactive %}">
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+
+                    <li class="nav-item {% block contactactive %} {% endblock contactactive %}">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+
+<!--Form and Buttons for search, login and signup-->
+
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 mx-1 my-sm-0" type="submit">Search</button>
+                </form>
+
+<!-- Buttons  logout, only showing when user is authenticated which is checked, at the place of login button user is shown his/her name, and if he clicks over it a dropdown menu will be shown which contain the options of logout-->
+              
+              {% if user.is_authenticated %}
+                
+                <div class="dropdown">
+                    <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{request.user}}
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      
+                      <a class="dropdown-item" href="/logout">Logout</a>
+
+                    </div>
+                </div>
+
+<!--if user is not authenticated then user is shown for signup and login option. if he is registered person then can login, if not then can register by sign up and a modal will be opened, by putting information one can register or login easily-->
+
+              {% else %}
+                  <button type="button" class="btn btn-outline-success my-2 mx-1 my-sm-0" data-toggle="modal" data-target="#signup">
+                        Sign Up 
+                  </button>
+
+                  <button type="button" class="btn btn-outline-success my-2 mx-1 my-sm-0" data-toggle="modal" data-target="#login">
+                        Login 
+                  </button>
+
+              {% endif %} <!--the loop is over for user verification-->
+
+              
+            </div>
+        </div>
+    </nav>
+
+<!--Django Message, here it is shown for successfully login or register-->
+          
+          {%for message in messages%}
+              
+              <div class="alert alert-{{message.tags}} alert-dismissible fade show role="alert">
+                  <strong>Message: </strong> {{message}} 
+                  
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                   </button>
+              </div>
+               
+          {% endfor %}
+
+
+
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="signup">SignUp Here</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        
+        {% csrf_token %} 
+        
+        <form action='/signup' method="post">
+
+          <div class="form-group">
+            <label for="username">Name</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="username">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="password1">PassWord</label>
+            <input type="password" class="form-control" id="password1" name="password1" placeholder="Give your password">
+          </div>
+
+          <div class="form-group">
+            <label for="password2">PassWord</label>
+            <input type="password" class="form-control" id="password2" name="password2" placeholder="Give your password agian">
+          </div>
+        
+          <button type="submit" class="btn btn-primary">Submit</button>
+          
+          {% csrf_token %}
+        
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Login Modal-->
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="login">Login Here</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+      
+      {% csrf_token %} 
+        
+        <form action='/login' method="post">
+
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input type="text" class="form-control" id="usernames" name="username" placeholder="username">
+          </div>
+
+  
+
+          <div class="form-group">
+            <label for="password1">PassWord</label>
+            <input type="password" class="form-control" id="password1s" name="passwordforsingle" placeholder="Give your password">
+          </div>
+
+  
+            <button type="submit" class="btn btn-primary">Submit</button>.
+          
+          {% csrf_token %}
+        
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- this block body loaded for individual pages -->
+      
+      {%block body %} {% endblock body %}
+
+  <!-- this is base html, our other pages are home, about, contact, and blogHome and BlogPost -->
+
+
+  <!--Bootstrap Document-->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
+
